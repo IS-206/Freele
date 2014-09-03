@@ -1,8 +1,0 @@
-Systemdefinisjon: 
-Hva skal systemet omfatte: 
-
-En skrivebordsapplikasjon som lar brukere kommunisere gjennom en tekstbasert chatteklient. Brukerne må laste ned et program som kjøres fra pc. Det skal være mulig for brukeren å se hvilke andre brukere som er pålogget. Meldingene som sendes skal bli kryptert slik at andre ikke kan lese disse. Programmet skal ha et enkelt brukergrensesnitt slik at alle kan bruke det.
-
-//Programmet skal være open source slik at andre kan være med i utviklingen, og kildekoden er åpen for alle.
-
-Brukerne skal også kunne sende filer til hverandre gjennom programmet.
