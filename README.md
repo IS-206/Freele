@@ -4,6 +4,9 @@ project
 School project
 
 Members of this project : 
+
 Kjetil Homme
-Vetle framnes
+
+Vetle Framnes
+
 Mirza Cirikovic
