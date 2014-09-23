@@ -21,4 +21,7 @@ Idea for the project:
   -   Easy to use for the end user
   -   Simple GUI
   -   Reliable and fast
+  
+  
+  www.freele.org
 
