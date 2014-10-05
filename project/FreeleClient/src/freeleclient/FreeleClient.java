@@ -6,7 +6,7 @@ package freeleclient;
 
 /**
  *
- * @author kjetil
+ * @author kjetil & mirza & vetle
  */
 public class FreeleClient {
 
