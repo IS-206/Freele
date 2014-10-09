@@ -4,15 +4,29 @@
  */
 package freeleclient;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.util.ArrayList;
+
 /**
  *
  * @author Vetle, Mirza, Kjetil
  */
 public class FreeleClient extends javax.swing.JFrame {
 
-    /**
-     * Here should the variabels come
-     */
+    String username;
+    String serverIP = "localhost";
+    int port = 4000;
+    Socket socket;
+    BufferedReader bufferedReader;
+    PrintWriter printWriter;
+    ArrayList<String> userList = new ArrayList();
+    Boolean isConnected = false;
+    
+            
+            
     public FreeleClient() {
         initComponents();
     }
@@ -23,19 +37,35 @@ public class FreeleClient extends javax.swing.JFrame {
         
         public void run () {}
         
+    }
+        
+//--------------------------------------------------------------------------------------------------------        
+        
         public void threadListener() {}
         
-        public void addUser(String data){]
+//--------------------------------------------------------------------------------------------------------         
+        
+        public void addUser(String data){}
+        
+//--------------------------------------------------------------------------------------------------------         
         
         public void removeUser(String data){}
         
+//--------------------------------------------------------------------------------------------------------         
+        
         public void writeUsers() {}
+        
+//--------------------------------------------------------------------------------------------------------         
         
         public void beDisconnect() {}
         
+//--------------------------------------------------------------------------------------------------------         
+        
         public void disconnect() {}
-        }
-    }
+        
+//--------------------------------------------------------------------------------------------------------         
+        
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -75,6 +105,11 @@ public class FreeleClient extends javax.swing.JFrame {
         });
 
         connectButton.setText("Connect");
+        connectButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                connectButtonActionPerformed(evt);
+            }
+        });
 
         disconnectButton.setText("Disconnect");
         disconnectButton.addActionListener(new java.awt.event.ActionListener() {
@@ -202,6 +237,35 @@ public class FreeleClient extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_disconnectButtonActionPerformed
 
+    
+    /**
+     * Creates a socket and establish a connection to the server process.
+     * @param evt 
+     */
+    private void connectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connectButtonActionPerformed
+        if(isConnected == false){
+            username = usernameField.getText();
+            usernameField.setEditable(false);
+            
+            try{
+            socket = new Socket(serverIP, port);
+            InputStreamReader reader = new InputStreamReader(socket.getInputStream());
+            bufferedReader = new BufferedReader(reader);
+            printWriter = new PrintWriter(socket.getOutputStream());
+            printWriter.println(username + ":has connected.:Connect");
+            printWriter.flush();
+            isConnected = true;
+            }catch(Exception e){
+            chatArea.append("Cannot connect, please try again. \n");
+            usernameField.setEditable(true);
+            }
+            threadListener();
+        }
+        else if(isConnected == true){
+            chatArea.append("You are already connected \n");
+        }
+    }//GEN-LAST:event_connectButtonActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -255,3 +319,4 @@ public class FreeleClient extends javax.swing.JFrame {
     private javax.swing.JTextField usernameField;
     // End of variables declaration//GEN-END:variables
 }
+
