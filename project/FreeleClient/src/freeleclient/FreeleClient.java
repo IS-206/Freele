@@ -38,6 +38,8 @@ public class FreeleClient extends javax.swing.JFrame {
 
 //--------------------------------------------------------------------------------------------------------        
     public void threadListener() {
+        Thread IncommingReader = new Thread(new IncomingReader());
+        IncommingReader.start();
     }
 
 //--------------------------------------------------------------------------------------------------------         
@@ -47,6 +49,8 @@ public class FreeleClient extends javax.swing.JFrame {
 
 //--------------------------------------------------------------------------------------------------------         
     public void removeUser(String data) {
+        chatArea.append(data + "has left the chat. \n");
+        
     }
 
 //--------------------------------------------------------------------------------------------------------         
