@@ -3,9 +3,14 @@
  */
 package freeleserver;
 
+import java.io.BufferedReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.util.ArrayList;
+
 /**
  *
- * @author Mirza
+ * @author Vetle, Mirza, Kjetil
  */
 public class FreeleServer {
 
@@ -13,7 +18,7 @@ public class FreeleServer {
      * @param args the command line arguments
      */
     ArrayList clientOutputStream;
-    Arraylist<String> onlineUsers = new ArrayList();
+    ArrayList<String> onlineUsers = new ArrayList();
     
     
     /*
@@ -23,15 +28,15 @@ public class FreeleServer {
         
         BufferedReader reader;
         Socket sock;
-        PrinterWriter client;
+        PrintWriter client;
         
         /*
             Connection socket
         */
-        public userServer(socker clientSocket, PrintWriter user) {
+        public userServer(Socket clientSocket, PrintWriter user) {
             
         }
-        
+//--------------------------------------------------------------------------------------------------------        
         
         /*
             Message runner, here the program will handel the message resived.
@@ -39,7 +44,7 @@ public class FreeleServer {
         public void run() {
             
         }
-        
+//--------------------------------------------------------------------------------------------------------        
         
         
     }
@@ -50,28 +55,29 @@ public class FreeleServer {
     public static void main(String[] args) {
         new FreeleServer().start();
     }
-    
+//--------------------------------------------------------------------------------------------------------    
     /*
        Server start function
     */
     public void start() {
         
     }
-    
-    /*
-       This method adds the user to the server
-    */
+//--------------------------------------------------------------------------------------------------------    
+    /**
+     * 
+     * @param data 
+     */
     public addUser(String data) {
         
     }
-    
+//--------------------------------------------------------------------------------------------------------    
     /*
        This method removes the user from the server
     */
     public removeUser(String data) {
         
     }
-    
+//--------------------------------------------------------------------------------------------------------    
     /*
        This is a method that handels all the messages that is written, or notifacation that is made.
     */
