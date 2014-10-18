@@ -31,30 +31,58 @@ public class FreeleClient extends javax.swing.JFrame {
 
     public class IncomingReader implements Runnable {
 
+        /**
+         * Responds on signals from the server
+         * (Invoked by the threadListener())
+         */
         public void run() {
+            String stream;
+            String[] data;
+            String done = "Done";
+            String connect = "Connect";
+            String chat = "Chat";
+            
+            try{
+                while((stream = bufferedReader.readLine()) != null){
+                    data = stream.split(":");
+                    
+                    //make the client respond to the string signals from the server (Done, Connect and Chat)
+                }
+            }catch(Exception e){
+                //
+            }
         }
 
     }
 
 //--------------------------------------------------------------------------------------------------------        
+    /**
+     * Starts a new Thread of the IncommingReader class
+     */
     public void threadListener() {
         Thread IncommingReader = new Thread(new IncomingReader());
         IncommingReader.start();
     }
 
 //--------------------------------------------------------------------------------------------------------         
+    /**
+     * Adds user to addUser list that shows online users on the client side
+     * @param data 
+     */
     public void addUser(String data) {
         userList.add(data);
     }
 
 //--------------------------------------------------------------------------------------------------------         
-    public void removeUser(String data) {
-        chatArea.append(data + "has left the chat. \n");
-        
-    }
-
-//--------------------------------------------------------------------------------------------------------         
+    /**
+     * Prints the userList in the onlineUsers area
+     */
     public void writeUsers() {
+        String[] list = new String[userList.size()];
+        userList.toArray(list);
+        for(String s : list){
+            onlineUsers.append(s + "\n");
+        }
     }
 
 //--------------------------------------------------------------------------------------------------------         
