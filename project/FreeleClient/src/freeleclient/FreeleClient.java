@@ -36,17 +36,29 @@ public class FreeleClient extends javax.swing.JFrame {
          * (Invoked by the threadListener())
          */
         public void run() {
-            String stream;
+            String transfer;
             String[] data;
             String done = "Done";
             String connect = "Connect";
             String chat = "Chat";
             
             try{
-                while((stream = bufferedReader.readLine()) != null){
-                    data = stream.split(":");
+                while((transfer = bufferedReader.readLine()) != null){
+                    data = transfer.split("β"); // this symbol will split
                     
-                    //make the client respond to the string signals from the server (Done, Connect and Chat)
+                    if (data[2].equals(chat)) {
+                        chatArea.append(data[0] + ": " +data[1] + "\n");
+                    }
+                    else if (data[2].equals(connect)) {
+                        chatArea.removeAll();
+                        addUser(data[0]);
+                    }
+                    else if (data[2].equals(done)) {
+                        onlineUsers.setText("");
+                        writeUsers();
+                        userList.clear();
+                    }
+                      
                 }
             }catch(Exception e){
                 //
