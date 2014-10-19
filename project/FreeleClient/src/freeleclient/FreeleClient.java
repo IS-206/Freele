@@ -4,6 +4,7 @@
  */
 package freeleclient;
 
+import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -102,7 +103,7 @@ public class FreeleClient extends javax.swing.JFrame {
      * Sends a disconnect-signal to the server and flushes the buffer
      */
     public void signalingDisconnect() {
-        String off = (username + ": :Disconnect");
+        String off = (username + "β βDisconnect");
         try {
             printWriter.println(off); 
             printWriter.flush(); 
@@ -163,6 +164,11 @@ public class FreeleClient extends javax.swing.JFrame {
                 usernameFieldActionPerformed(evt);
             }
         });
+        usernameField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                usernameFieldKeyPressed(evt);
+            }
+        });
 
         connectButton.setText("Connect");
         connectButton.addActionListener(new java.awt.event.ActionListener() {
@@ -193,6 +199,11 @@ public class FreeleClient extends javax.swing.JFrame {
 
         inputField.setColumns(20);
         inputField.setRows(5);
+        inputField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                inputFieldKeyPressed(evt);
+            }
+        });
         jScrollPane3.setViewportView(inputField);
 
         sendButton.setText("Send");
@@ -290,7 +301,25 @@ public class FreeleClient extends javax.swing.JFrame {
     }//GEN-LAST:event_usernameFieldActionPerformed
 
     private void sendButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendButtonActionPerformed
-        // TODO add your handling code here:
+        String n = "";
+        if ((inputField.getText()).equals(n)) {
+            inputField.setText("");
+            inputField.requestFocus();
+        }
+        else {
+            try {
+                printWriter.println(username + "β" + inputField.getText() + "β" + "Chat");
+                printWriter.flush();
+            }
+            catch (Exception e) {
+                chatArea.append("Error in sending message. \n");
+            }
+            inputField.setText("");
+            inputField.requestFocus();
+        }
+        
+        inputField.setText("");
+        inputField.requestFocus();
     }//GEN-LAST:event_sendButtonActionPerformed
 
     /**
@@ -316,7 +345,7 @@ public class FreeleClient extends javax.swing.JFrame {
                 InputStreamReader reader = new InputStreamReader(socket.getInputStream());
                 bufferedReader = new BufferedReader(reader);
                 printWriter = new PrintWriter(socket.getOutputStream());
-                printWriter.println(username + ":has connected.:Connect");
+                printWriter.println(username + "βhas connected.βConnect");
                 printWriter.flush();
                 isConnected = true;
             } catch (Exception e) {
@@ -328,6 +357,59 @@ public class FreeleClient extends javax.swing.JFrame {
             chatArea.append("You are already connected \n");
         }
     }//GEN-LAST:event_connectButtonActionPerformed
+
+    // Added a keyvenet in the inputfield, where when the user press the ENTER on the keyboard that sends the message to the server.
+    private void inputFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inputFieldKeyPressed
+        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
+            
+            if (isConnected == false) {
+                username = usernameField.getText();
+                usernameField.setEditable(false);
+
+                try {
+                    socket = new Socket(serverIP, port);
+                    InputStreamReader reader = new InputStreamReader(socket.getInputStream());
+                    bufferedReader = new BufferedReader(reader);
+                    printWriter = new PrintWriter(socket.getOutputStream());
+                    printWriter.println(username + "βhas connected.βConnect");
+                    printWriter.flush();
+                    isConnected = true;
+                } catch (Exception e) {
+                    chatArea.append("Cannot connect, please try again. \n");
+                    usernameField.setEditable(true);
+                }
+                threadListener();
+            } else if (isConnected == true) {
+                chatArea.append("You are already connected \n");
+            } 
+            
+        }
+    }//GEN-LAST:event_inputFieldKeyPressed
+
+    private void usernameFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_usernameFieldKeyPressed
+        if(evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            if (isConnected == false) {
+                username = usernameField.getText();
+                usernameField.setEditable(false);
+
+                try {
+                    socket = new Socket(serverIP, port);
+                    InputStreamReader reader = new InputStreamReader(socket.getInputStream());
+                    bufferedReader = new BufferedReader(reader);
+                    printWriter = new PrintWriter(socket.getOutputStream());
+                    printWriter.println(username + "βhas connected.βConnect");
+                    printWriter.flush();
+                    isConnected = true;
+                } catch (Exception e) {
+                    chatArea.append("Cannot connect, please try again. \n");
+                    usernameField.setEditable(true);
+                }
+                threadListener();
+            } else if (isConnected == true) {
+                chatArea.append("You are already connected \n");
+            }
+        }
+    }//GEN-LAST:event_usernameFieldKeyPressed
 
     /**
      * @param args the command line arguments
