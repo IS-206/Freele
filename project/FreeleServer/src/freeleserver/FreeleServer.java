@@ -33,6 +33,7 @@ public class FreeleServer {
         /*
          Connection socket
          */
+        
         public UserServer(Socket clientSocket, PrintWriter user) {
             client = user;
             try {
