@@ -19,70 +19,91 @@ public class FreeleServer {
      */
     ArrayList clientOutputStream;
     ArrayList<String> onlineUsers = new ArrayList();
-    
-    
+
     /*
-        This class is gonna handle our clients, with socket and with connections from diffrent users.
-    */
-    public class userServer implements Runnable {
-        
-        BufferedReader reader;
-        Socket sock;
+     This class is gonna handle our clients, with socket and with connections from diffrent users.
+     */
+    public class UserServer implements Runnable {
+
+        BufferedReader bufferedReader;
+        Socket socket;
         PrintWriter client;
-        
+
         /*
-            Connection socket
-        */
-        public userServer(Socket clientSocket, PrintWriter user) {
-            
+         Connection socket
+         */
+        public UserServer(Socket clientSocket, PrintWriter user) {
         }
 //--------------------------------------------------------------------------------------------------------        
-        
+
         /*
-            Message runner, here the program will handel the message resived.
-        */
+         Message runner, here the program will handel the message resived.
+         */
         public void run() {
-            
+            String message;
+            String conncent = "Connect";
+            String chat = "Chat";
+            String[] data;
+
+            try {
+                while ((message = bufferedReader.readLine()) != null) {
+                    System.out.println("Message: " + message);
+                    data = message.split("β");
+                    for (String i : data) {
+                        System.out.println(i + "\n");
+                    }
+                    if (data[2].equals(conncent)) {
+                        messageAll((data[0] + "β" + data[1] + "β" + chat));
+                        addUser(data[0]);
+                    } else if (data[2].equals(chat)) {
+                        messageAll(message);
+                    } else {
+                        System.out.println("something gone wrong");
+                    }
+                }
+
+            } catch (Exception e) {
+                System.out.println("connection lost");
+                clientOutputStream.remove(client);
+            }
+
         }
-//--------------------------------------------------------------------------------------------------------        
-        
-        
     }
-    
+//--------------------------------------------------------------------------------------------------------        
+
     /*
-       Main function to start the program
-    */
+     Main function to start the program
+     */
     public static void main(String[] args) {
         new FreeleServer().start();
     }
 //--------------------------------------------------------------------------------------------------------    
     /*
-       Server start function
-    */
+     Server start function
+     */
+
     public void start() {
-        
     }
 //--------------------------------------------------------------------------------------------------------    
+
     /**
-     * 
-     * @param data 
+     *
+     * @param data
      */
     public addUser(String data) {
-        
     }
 //--------------------------------------------------------------------------------------------------------    
     /*
-       This method removes the user from the server
-    */
+     This method removes the user from the server
+     */
+
     public removeUser(String data) {
-        
     }
 //--------------------------------------------------------------------------------------------------------    
     /*
-       This is a method that handels all the messages that is written, or notifacation that is made.
-    */
+     This is a method that handels all the messages that is written, or notifacation that is made.
+     */
+
     public void messageAll(String message) {
-        
     }
-    
 }
