@@ -6,6 +6,7 @@ package freeleserver;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
@@ -18,7 +19,7 @@ public class FreeleServer {
     /**
      * @param args the command line arguments
      */
-    ArrayList clientOutputStream;
+    ArrayList userOutputStream;
     ArrayList<String> onlineUsers = new ArrayList();
 
     /*
@@ -75,7 +76,7 @@ public class FreeleServer {
 
             } catch (Exception e) {
                 System.out.println("connection lost");
-                clientOutputStream.remove(client);
+                userOutputStream.remove(client);
             }
 
         }
@@ -90,10 +91,29 @@ public class FreeleServer {
     }
 //--------------------------------------------------------------------------------------------------------    
     /*
-     Server start function
+     This method establish connection to the clients and creats a new thread to the client.
      */
 
     public void start() {
+        userOutputStream = new ArrayList ();
+        
+        try {
+            ServerSocket serverSocket = new ServerSocket(5000);
+            
+            while (true) { 
+                Socket clientSock = serverSocket.accept();
+                PrintWriter writer = new PrintWriter(clientSock.getOutputStream());
+                userOutputStream.add(writer);
+                
+                Thread listener = new Thread(new UserServer(clientSock, writer));
+                listener.start();
+                System.out.println("connection complete");
+                 
+            }
+        }
+        catch (Exception e) {
+            System.out.println("connection failed");
+        }
     }
 //--------------------------------------------------------------------------------------------------------    
 
