@@ -9,6 +9,7 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  *
@@ -118,23 +119,59 @@ public class FreeleServer {
 //--------------------------------------------------------------------------------------------------------    
 
     /**
-     *
+     *This method add users into the system and sends a signal to print out users on the client side
      * @param data
      */
-    public addUser(String data) {
+    public void addUser(String data) {
+        String message;
+        String add = "β βConnect";
+        String done = "Server β β Done";
+        onlineUsers.add(data);
+        String[] l = new String[(onlineUsers.size())];
+        onlineUsers.toArray(l);
+        
+        for(String s : l) {
+            message = (s + add);
+            messageAll(message);
+        }
+        messageAll(done);
     }
 //--------------------------------------------------------------------------------------------------------    
-    /*
-     This method removes the user from the server
+    /**
+     * This method removes users into the system and sends a signal to print out users on the client side
+     * @param data 
      */
-
-    public removeUser(String data) {
+    public void removeUser(String data) {
+        String message;
+        String add = "β βConnect";
+        String done = "Server β β Done";
+        onlineUsers.remove(data);
+        String[] l = new String[(onlineUsers.size())];
+        onlineUsers.toArray(l);
+        
+        for(String s : l) {
+            message = (s + add);
+            messageAll(message);
+        }
+        messageAll(done);        
     }
 //--------------------------------------------------------------------------------------------------------    
-    /*
-     This is a method that handels all the messages that is written, or notifacation that is made.
+    /**
+     * This method is used to send messages to all clients connected to the server
+     * @param message 
      */
-
-    public void messageAll(String message) {
+    public void messageAll(String m) {
+        Iterator i = userOutputStream.iterator();
+        
+        while(i.hasNext()){
+            try{
+                PrintWriter w = (PrintWriter) i.next();
+                w.println(m);
+                System.out.println("Send " + m);
+                w.flush();
+            }catch(Exception e){
+                System.out.println("message all failed");
+            }
+        }
     }
 }
