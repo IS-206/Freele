@@ -99,7 +99,7 @@ public class FreeleServer {
         userOutputStream = new ArrayList ();
         
         try {
-            ServerSocket serverSocket = new ServerSocket(5000);
+            ServerSocket serverSocket = new ServerSocket(80);
             
             while (true) { 
                 Socket clientSock = serverSocket.accept();

@@ -19,7 +19,7 @@ public class FreeleClient extends javax.swing.JFrame {
 
     String username;
     String serverIP = "localhost";
-    int port = 4000;
+    int port = 80;
     Socket socket;
     BufferedReader bufferedReader;
     PrintWriter printWriter;
