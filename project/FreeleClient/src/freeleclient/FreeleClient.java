@@ -19,7 +19,7 @@ public class FreeleClient extends javax.swing.JFrame {
 
     String username;
     String serverIP = "localhost";
-    int port = 80;
+    int port = 4000;
     Socket socket;
     BufferedReader bufferedReader;
     PrintWriter printWriter;
@@ -49,15 +49,20 @@ public class FreeleClient extends javax.swing.JFrame {
                     
                     if (data[2].equals(chat)) {
                         chatArea.append(data[0] + ": " +data[1] + "\n");
+                        chatArea.setCaretPosition(chatArea.getDocument().getLength());
                     }
                     else if (data[2].equals(connect)) {
                         chatArea.removeAll();
                         addUser(data[0]);
                     }
                     else if (data[2].equals(done)) {
+                        System.out.println("1");
                         onlineUsers.setText("");
+                        System.out.println("2");
                         writeUsers();
+                        System.out.println("3");
                         userList.clear();
+                        System.out.println("4");
                     }
                       
                 }
@@ -362,27 +367,25 @@ public class FreeleClient extends javax.swing.JFrame {
     private void inputFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inputFieldKeyPressed
         if(evt.getKeyCode() == KeyEvent.VK_ENTER){
             
-            if (isConnected == false) {
-                username = usernameField.getText();
-                usernameField.setEditable(false);
-
-                try {
-                    socket = new Socket(serverIP, port);
-                    InputStreamReader reader = new InputStreamReader(socket.getInputStream());
-                    bufferedReader = new BufferedReader(reader);
-                    printWriter = new PrintWriter(socket.getOutputStream());
-                    printWriter.println(username + "βhas connected.βConnect");
-                    printWriter.flush();
-                    isConnected = true;
-                } catch (Exception e) {
-                    chatArea.append("Cannot connect, please try again. \n");
-                    usernameField.setEditable(true);
-                }
-                threadListener();
-            } else if (isConnected == true) {
-                chatArea.append("You are already connected \n");
-            } 
-            
+        String n = "";
+        if ((inputField.getText()).equals(n)) {
+            inputField.setText("");
+            inputField.requestFocus();
+        }
+        else {
+            try {
+                printWriter.println(username + "β" + inputField.getText() + "β" + "Chat");
+                printWriter.flush();
+            }
+            catch (Exception e) {
+                chatArea.append("Error in sending message. \n");
+            }
+            inputField.setText("");
+            inputField.requestFocus();
+        }
+        
+        inputField.setText("");
+        inputField.requestFocus();
         }
     }//GEN-LAST:event_inputFieldKeyPressed
 

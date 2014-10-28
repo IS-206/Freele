@@ -54,8 +54,9 @@ public class FreeleServer {
          */
         public void run() {
             String message;
-            String conncent = "Connect";
+            String connect = "Connect";
             String chat = "Chat";
+            String disconnect = "Disconnect";
             String[] data;
 
             try {
@@ -65,9 +66,12 @@ public class FreeleServer {
                     for (String i : data) {
                         System.out.println(i + "\n");
                     }
-                    if (data[2].equals(conncent)) {
+                    if (data[2].equals(connect)) {
                         messageAll((data[0] + "β" + data[1] + "β" + chat));
                         addUser(data[0]);
+                    } else if (data[2].equals(disconnect)) {
+                        messageAll((data[0] + "βhas disconnected." + "β" + chat));
+                        removeUser(data[0]);
                     } else if (data[2].equals(chat)) {
                         messageAll(message);
                     } else {
@@ -99,7 +103,7 @@ public class FreeleServer {
         userOutputStream = new ArrayList ();
         
         try {
-            ServerSocket serverSocket = new ServerSocket(80);
+            ServerSocket serverSocket = new ServerSocket(4000);
             
             while (true) { 
                 Socket clientSock = serverSocket.accept();
@@ -124,7 +128,7 @@ public class FreeleServer {
      */
     public void addUser(String data) {
         String message;
-        String add = "β βConnect";
+        String add = "β β Connect";
         String done = "Server β β Done";
         onlineUsers.add(data);
         String[] l = new String[(onlineUsers.size())];
@@ -158,7 +162,7 @@ public class FreeleServer {
 //--------------------------------------------------------------------------------------------------------    
     /**
      * This method is used to send messages to all clients connected to the server
-     * @param message 
+     * @param m 
      */
     public void messageAll(String m) {
         Iterator i = userOutputStream.iterator();
