@@ -128,8 +128,8 @@ public class FreeleServer {
      */
     public void addUser(String data) {
         String message;
-        String add = "β β Connect";
-        String done = "Server β β Done";
+        String add = "β βConnect";
+        String done = "Serverβ βDone";
         onlineUsers.add(data);
         String[] l = new String[(onlineUsers.size())];
         onlineUsers.toArray(l);
@@ -148,7 +148,7 @@ public class FreeleServer {
     public void removeUser(String data) {
         String message;
         String add = "β βConnect";
-        String done = "Server β β Done";
+        String done = "Serverβ βDone";
         onlineUsers.remove(data);
         String[] l = new String[(onlineUsers.size())];
         onlineUsers.toArray(l);
