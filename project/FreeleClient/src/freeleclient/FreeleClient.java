@@ -56,13 +56,9 @@ public class FreeleClient extends javax.swing.JFrame {
                         addUser(data[0]);
                     }
                     else if (data[2].equals(done)) {
-                        System.out.println("1");
                         onlineUsers.setText("");
-                        System.out.println("2");
                         writeUsers();
-                        System.out.println("3");
                         userList.clear();
-                        System.out.println("4");
                     }
                       
                 }
