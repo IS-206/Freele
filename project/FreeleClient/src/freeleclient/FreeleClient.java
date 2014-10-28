@@ -18,7 +18,7 @@ import java.util.ArrayList;
 public class FreeleClient extends javax.swing.JFrame {
 
     String username;
-    String serverIP = "localhost";
+    String serverIP = "85.164.148.206";
     int port = 4000;
     Socket socket;
     BufferedReader bufferedReader;
@@ -198,6 +198,7 @@ public class FreeleClient extends javax.swing.JFrame {
         jScrollPane2.setViewportView(chatArea);
 
         inputField.setColumns(20);
+        inputField.setLineWrap(true);
         inputField.setRows(1);
         inputField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -239,7 +240,7 @@ public class FreeleClient extends javax.swing.JFrame {
                                     .addComponent(jLabel3)))))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 41, Short.MAX_VALUE)
+                        .addGap(18, 61, Short.MAX_VALUE)
                         .addComponent(usernameField, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(connectButton)
