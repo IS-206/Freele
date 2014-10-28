@@ -208,6 +208,9 @@ public class FreeleClient extends javax.swing.JFrame {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 inputFieldKeyPressed(evt);
             }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                inputFieldKeyReleased(evt);
+            }
         });
         jScrollPane3.setViewportView(inputField);
 
@@ -384,7 +387,7 @@ public class FreeleClient extends javax.swing.JFrame {
             inputField.requestFocus();
         }
         
-        inputField.setText("");
+        inputField.setText(null);
         inputField.requestFocus();
         }
     }//GEN-LAST:event_inputFieldKeyPressed
@@ -413,6 +416,13 @@ public class FreeleClient extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_usernameFieldKeyPressed
+
+// Fixes the new line that the inputFieldKeyPressed() makes after sending a message, this will set the text field to nothing and afther you release the enter button.
+    private void inputFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inputFieldKeyReleased
+        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
+            inputField.setText(null);
+        }
+    }//GEN-LAST:event_inputFieldKeyReleased
 
     /**
      * @param args the command line arguments
