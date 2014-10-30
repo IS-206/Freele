@@ -126,6 +126,8 @@ public class FreeleClient extends javax.swing.JFrame {
         }
         isConnected = false;
         usernameField.setEditable(true);
+        getIP.setEditable(true);
+        getPORT.setEditable(true);
         onlineUsers.setText("");
     }
 
