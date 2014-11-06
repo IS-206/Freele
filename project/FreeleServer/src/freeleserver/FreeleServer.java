@@ -6,10 +6,13 @@ package freeleserver;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map.Entry;
 
 /**
  *
@@ -21,7 +24,8 @@ public class FreeleServer {
      * @param args the command line arguments
      */
     ArrayList userOutputStream;
-    ArrayList<String> onlineUsers = new ArrayList();
+    HashMap<String, InetAddress> onlineUsers = new HashMap(); 
+    //ArrayList<String> onlineUsers = new ArrayList();
 
     /*
      This class is gonna handle our clients, with socket and with connections from diffrent users.
@@ -31,6 +35,7 @@ public class FreeleServer {
         BufferedReader bufferedReader;
         Socket socket;
         PrintWriter client;
+        InetAddress clientAddress;
 
         /*
          Connection socket
@@ -40,6 +45,7 @@ public class FreeleServer {
             client = user;
             try {
                 socket = clientSocket;
+                clientAddress = socket.getInetAddress();
                 InputStreamReader isReader = new InputStreamReader(socket.getInputStream());
                 bufferedReader = new BufferedReader(isReader);
             }
@@ -68,7 +74,7 @@ public class FreeleServer {
                     }
                     if (data[2].equals(connect)) {
                         messageAll((data[0] + "β" + data[1] + "β" + chat));
-                        addUser(data[0]);
+                        addUser(data[0], clientAddress);
                     } else if (data[2].equals(disconnect)) {
                         messageAll((data[0] + "βhas disconnected." + "β" + chat));
                         removeUser(data[0]);
@@ -126,16 +132,17 @@ public class FreeleServer {
      *This method add users into the system and sends a signal to print out users on the client side
      * @param data
      */
-    public void addUser(String data) {
+    public void addUser(String data, InetAddress ip) {
         String message;
         String add = "β βConnect";
         String done = "Serverβ βDone";
-        onlineUsers.add(data);
-        String[] l = new String[(onlineUsers.size())];
-        onlineUsers.toArray(l);
+        onlineUsers.put(data, ip);
+        //String[] l = new String[(onlineUsers.size())];
+        //onlineUsers.toArray(l);
         
-        for(String s : l) {
-            message = (s + add);
+        for(Entry<String, InetAddress> s : onlineUsers.entrySet()) {
+            String k = s.getKey();
+            message = (k + add);
             messageAll(message);
         }
         messageAll(done);
@@ -150,11 +157,12 @@ public class FreeleServer {
         String add = "β βConnect";
         String done = "Serverβ βDone";
         onlineUsers.remove(data);
-        String[] l = new String[(onlineUsers.size())];
-        onlineUsers.toArray(l);
+        //String[] l = new String[(onlineUsers.size())];
+        //onlineUsers.toArray(l);
         
-        for(String s : l) {
-            message = (s + add);
+        for(Entry<String, InetAddress> s : onlineUsers.entrySet()) {
+            String k = s.getKey();
+            message = (k + add);
             messageAll(message);
         }
         messageAll(done);        
