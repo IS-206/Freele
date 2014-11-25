@@ -33,8 +33,7 @@ public class FreeleClient extends javax.swing.JFrame {
     public class IncomingReader implements Runnable {
 
         /**
-         * Responds on signals from the server
-         * (Invoked by the threadListener())
+         * Responds on signals from the server (Invoked by the threadListener())
          */
         public void run() {
             String transfer;
@@ -42,27 +41,28 @@ public class FreeleClient extends javax.swing.JFrame {
             String done = "Done";
             String connect = "Connect";
             String chat = "Chat";
-            
-            try{
-                while((transfer = bufferedReader.readLine()) != null){
+            String privateChat = "Private";
+
+            try {
+                while ((transfer = bufferedReader.readLine()) != null) {
                     data = transfer.split("β"); // this symbol will split
-                    
+
                     if (data[2].equals(chat)) {
-                        chatArea.append(data[0] + ": " +data[1] + "\n");
+                        chatArea.append(data[0] + ": " + data[1] + "\n");
                         chatArea.setCaretPosition(chatArea.getDocument().getLength());
-                    }
-                    else if (data[2].equals(connect)) {
+                    } else if (data[2].equals(connect)) {
                         chatArea.removeAll();
                         addUser(data[0]);
-                    }
-                    else if (data[2].equals(done)) {
+                    } else if (data[2].equals(done)) {
                         onlineUsers.setText("");
                         writeUsers();
                         userList.clear();
+                    } else if (data[2].equals(privateChat)){
+                        privateMessage();
                     }
-                      
+
                 }
-            }catch(Exception e){
+            } catch (Exception e) {
                 //
             }
         }
@@ -81,7 +81,8 @@ public class FreeleClient extends javax.swing.JFrame {
 //--------------------------------------------------------------------------------------------------------         
     /**
      * Adds user to addUser list that shows online users on the client side
-     * @param data 
+     *
+     * @param data
      */
     public void addUser(String data) {
         userList.add(data);
@@ -94,9 +95,13 @@ public class FreeleClient extends javax.swing.JFrame {
     public void writeUsers() {
         String[] list = new String[userList.size()];
         userList.toArray(list);
-        for(String s : list){
+        for (String s : list) {
             onlineUsers.append(s + "\n");
         }
+    }
+    
+    public void privateMessage(){
+        new PrivateChat().setVisible(true);
     }
 
 //--------------------------------------------------------------------------------------------------------         
@@ -106,8 +111,8 @@ public class FreeleClient extends javax.swing.JFrame {
     public void signalingDisconnect() {
         String off = (username + "β βDisconnect");
         try {
-            printWriter.println(off); 
-            printWriter.flush(); 
+            printWriter.println(off);
+            printWriter.flush();
         } catch (Exception e) {
             chatArea.append("Could not send the disconnect message. \n");
         }
@@ -115,7 +120,7 @@ public class FreeleClient extends javax.swing.JFrame {
 
 //--------------------------------------------------------------------------------------------------------         
     /**
-     * Closes the socket to the server and cleans the client-window 
+     * Closes the socket to the server and cleans the client-window
      */
     public void disconnect() {
         try {
@@ -158,6 +163,8 @@ public class FreeleClient extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         getPORT = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
+        privateChatField = new javax.swing.JTextField();
+        privateConversationButton = new javax.swing.JButton();
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -262,6 +269,13 @@ public class FreeleClient extends javax.swing.JFrame {
 
         jLabel4.setText("Port:");
 
+        privateConversationButton.setText("Private conversation");
+        privateConversationButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                privateConversationButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -288,7 +302,7 @@ public class FreeleClient extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(getPORT, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(181, Short.MAX_VALUE))
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(disconnectButton, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -296,13 +310,18 @@ public class FreeleClient extends javax.swing.JFrame {
                                 .addComponent(jLabel2)
                                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 412, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 412, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 27, Short.MAX_VALUE))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 412, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(privateChatField)
+                                    .addComponent(privateConversationButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addGap(0, 8, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -323,11 +342,15 @@ public class FreeleClient extends javax.swing.JFrame {
                     .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(privateChatField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(privateConversationButton))
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -340,7 +363,8 @@ public class FreeleClient extends javax.swing.JFrame {
 
     /**
      * Sends the server a disconnect signal before the socket closes
-     * @param evt 
+     *
+     * @param evt
      */
     private void disconnectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_disconnectButtonActionPerformed
         signalingDisconnect();
@@ -349,6 +373,7 @@ public class FreeleClient extends javax.swing.JFrame {
 
     /**
      * Creates a socket and establish a connection to the server process.
+     *
      * @param evt
      */
     private void connectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connectButtonActionPerformed
@@ -380,35 +405,35 @@ public class FreeleClient extends javax.swing.JFrame {
 
     // Added a keyvenet in the inputfield, where when the user press the ENTER on the keyboard that sends the message to the server.
     private void inputFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inputFieldKeyPressed
-        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
-            
-        String n = "";
-        if ((inputField.getText()).equals(n)) {
-            inputField.setText("");
-            inputField.requestFocus();
-        }
-        else {
-            try {
-                printWriter.println(username + "β" + inputField.getText() + "β" + "Chat");
-                printWriter.flush();
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+
+            String n = "";
+            if ((inputField.getText()).equals(n)) {
+                inputField.setText("");
+                inputField.requestFocus();
+            } else {
+                try {
+                    printWriter.println(username + "β" + inputField.getText() + "β" + "Chat");
+                    printWriter.flush();
+                } catch (Exception e) {
+                    chatArea.append("Error in sending message. \n");
+                }
+                inputField.setText("");
+                inputField.requestFocus();
             }
-            catch (Exception e) {
-                chatArea.append("Error in sending message. \n");
-            }
-            inputField.setText("");
+
+            inputField.setText(null);
             inputField.requestFocus();
-        }
-        
-        inputField.setText(null);
-        inputField.requestFocus();
         }
     }//GEN-LAST:event_inputFieldKeyPressed
 
     private void usernameFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_usernameFieldKeyPressed
-        if(evt.getKeyCode() == KeyEvent.VK_ENTER) {
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             if (isConnected == false) {
                 username = usernameField.getText();
                 usernameField.setEditable(false);
+                getIP.setEditable(false);
+                getPORT.setEditable(false);
 
                 try {
                     socket = new Socket(serverIP, port);
@@ -431,7 +456,7 @@ public class FreeleClient extends javax.swing.JFrame {
 
 // Fixes the new line that the inputFieldKeyPressed() makes after sending a message, this will set the text field to nothing and afther you release the enter button.
     private void inputFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inputFieldKeyReleased
-        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             inputField.setText(null);
         }
     }//GEN-LAST:event_inputFieldKeyReleased
@@ -459,6 +484,13 @@ public class FreeleClient extends javax.swing.JFrame {
     private void getPORTKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_getPORTKeyPressed
         // TODO add your handling code here:
     }//GEN-LAST:event_getPORTKeyPressed
+
+    private void privateConversationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_privateConversationButtonActionPerformed
+        new PrivateChat().setVisible(true);
+        String p = privateChatField.getText();
+        printWriter.println(p + "β βPrivate");
+        printWriter.flush();
+    }//GEN-LAST:event_privateConversationButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -510,6 +542,8 @@ public class FreeleClient extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTextArea onlineUsers;
+    private javax.swing.JTextField privateChatField;
+    private javax.swing.JButton privateConversationButton;
     private javax.swing.JTextField usernameField;
     private javax.swing.JTextField usernameField2;
     // End of variables declaration//GEN-END:variables
