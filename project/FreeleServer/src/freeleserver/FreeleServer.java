@@ -82,8 +82,8 @@ public class FreeleServer {
                     } else if (data[2].equals(chat)) {
                         messageAll(message);
                     } else if (data[2].equals(privateChat)) {
-                        privateConversation(data[0], data[1]);
-                        System.out.println(data[0] + "5kommer hit" + data[1] + data[2]);
+                        privateConversation(data[0], data[1], data[3]);
+                        System.out.println(data[0] + "5kommer hit" + data[1] + data[2] + data[3]);
                     } else {
                         System.out.println("something gone wrong");
                     }
@@ -183,16 +183,15 @@ public class FreeleServer {
      *
      * @param username
      * @param m
+     * @param privName
      */
-    public void privateConversation(String username, String m) {
-        String message = "β βPrivate";
+    public void privateConversation(String username, String m, String privName) {
+        String message = "ββPrivate" + "β" + privName;
         for (Entry<String, PrintWriter> s : userOutputStream.entrySet()) {
             PrintWriter p = s.getValue();
-            System.out.println("1 funker denne if-setningen?");
             if (username.equals(s.getKey())) {
                 p.println(m + message);
                 p.flush();
-                System.out.println("2 denne if-setningen funker");
             }
         }
 
