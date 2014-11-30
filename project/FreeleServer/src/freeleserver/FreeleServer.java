@@ -4,14 +4,13 @@
 package freeleserver;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map.Entry;
 
 /**
@@ -24,7 +23,7 @@ public class FreeleServer {
      * @param args the command line arguments
      */
     HashMap<String, PrintWriter> userOutputStream;
-    HashMap<String, InetAddress> onlineUsers = new HashMap(); //trenger kanskje ikke denne listen, brukernavnene lagres også i userOutputStream
+    //HashMap<String, InetAddress> onlineUsers = new HashMap(); //trenger kanskje ikke denne listen, brukernavnene lagres også i userOutputStream
     //ArrayList<String> onlineUsers = new ArrayList();
 
     /*
@@ -47,7 +46,7 @@ public class FreeleServer {
                 clientAddress = socket.getInetAddress();
                 InputStreamReader isReader = new InputStreamReader(socket.getInputStream());
                 bufferedReader = new BufferedReader(isReader);
-            } catch (Exception ex) {
+            } catch (IOException ex) {
                 System.out.println("Error beginning StreamReader. \n");
             }
         }
@@ -74,8 +73,9 @@ public class FreeleServer {
                     }
                     if (data[2].equals(connect)) {
                         messageAll((data[0] + "β" + data[1] + "β" + chat));
-                        userOutputStream.put(data[0], client);
-                        addUser(data[0], clientAddress);
+                        addUser(data[0], client);
+                        //userOutputStream.put(data[0], client);
+                        //addUser(data[0], clientAddress);
                     } else if (data[2].equals(disconnect)) {
                         messageAll((data[0] + "βhas disconnected." + "β" + chat));
                         removeUser(data[0]);
@@ -89,7 +89,7 @@ public class FreeleServer {
                     }
                 }
 
-            } catch (Exception e) {
+            } catch (IOException e) {
                 System.out.println("connection lost");
                 userOutputStream.remove(client);
             }
@@ -125,7 +125,7 @@ public class FreeleServer {
                 System.out.println("connection complete");
 
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
             System.out.println("connection failed");
         }
     }
@@ -136,17 +136,16 @@ public class FreeleServer {
      * users on the client side
      *
      * @param data
-     * @param ip
+     * @param p
      */
-    public void addUser(String data, InetAddress ip) {
+    public void addUser(String data, PrintWriter p) {
         String message;
         String add = "β βConnect";
         String done = "Serverβ βDone";
-        onlineUsers.put(data, ip);
+        userOutputStream.put(data, p);
         //String[] l = new String[(onlineUsers.size())];
         //onlineUsers.toArray(l);
-
-        for (Entry<String, InetAddress> s : onlineUsers.entrySet()) {
+        for (Entry<String, PrintWriter> s : userOutputStream.entrySet()) {
             String k = s.getKey();
             message = (k + add);
             messageAll(message);
@@ -165,11 +164,10 @@ public class FreeleServer {
         String message;
         String add = "β βConnect";
         String done = "Serverβ βDone";
-        onlineUsers.remove(data);
+        userOutputStream.remove(data);
         //String[] l = new String[(onlineUsers.size())];
         //onlineUsers.toArray(l);
-
-        for (Entry<String, InetAddress> s : onlineUsers.entrySet()) {
+        for (Entry<String, PrintWriter> s : userOutputStream.entrySet()) {
             String k = s.getKey();
             message = (k + add);
             messageAll(message);

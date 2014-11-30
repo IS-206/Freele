@@ -6,6 +6,7 @@ package freeleclient;
 
 import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -35,6 +36,7 @@ public class FreeleClient extends javax.swing.JFrame {
         /**
          * Responds on signals from the server (Invoked by the threadListener())
          */
+        @Override
         public void run() {
             String transfer;
             String[] data;
@@ -62,7 +64,7 @@ public class FreeleClient extends javax.swing.JFrame {
                     }
 
                 }
-            } catch (Exception e) {
+            } catch (IOException e) {
                 //
             }
         }
@@ -98,8 +100,21 @@ public class FreeleClient extends javax.swing.JFrame {
         for (String s : list) {
             onlineUsers.append(s + "\n");
         }
+        System.out.println("1 userList har " + userList.size() + " items");
+        final String[] strings = new String[userList.size()];
+        userList.toArray(strings);
+        jList1.setModel(new javax.swing.AbstractListModel() {
+            
+            
+            @Override
+            public int getSize() { return strings.length; }
+            @Override
+            public String getElementAt(int i) { return strings[i]; }
+        }); 
+        System.out.println("2 strings har " + strings.length + " items.");
     }
     
+//--------------------------------------------------------------------------------------------------------     
     public void privateMessage(String privName){
         new PrivateChat(privName).setVisible(true);
     }
@@ -126,7 +141,7 @@ public class FreeleClient extends javax.swing.JFrame {
         try {
             chatArea.append("Disconnected \n");
             socket.close();
-        } catch (Exception e) {
+        } catch (IOException e) {
             chatArea.append("Failed to disconnect");
         }
         isConnected = false;
@@ -165,6 +180,8 @@ public class FreeleClient extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         privateChatField = new javax.swing.JTextField();
         privateConversationButton = new javax.swing.JButton();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        jList1 = new javax.swing.JList();
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -276,6 +293,13 @@ public class FreeleClient extends javax.swing.JFrame {
             }
         });
 
+        jList1.setModel(new javax.swing.AbstractListModel() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public Object getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane4.setViewportView(jList1);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -312,8 +336,10 @@ public class FreeleClient extends javax.swing.JFrame {
                                 .addGap(18, 18, 18)
                                 .addComponent(disconnectButton, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel2)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addComponent(jLabel2)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -332,9 +358,10 @@ public class FreeleClient extends javax.swing.JFrame {
                     .addComponent(disconnectButton)
                     .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 253, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 253, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 253, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -384,7 +411,7 @@ public class FreeleClient extends javax.swing.JFrame {
                 printWriter.println(username + "βhas connected.βConnect");
                 printWriter.flush();
                 isConnected = true;
-            } catch (Exception e) {
+            } catch (IOException e) {
                 chatArea.append("Cannot connect, please try again. \n");
                 usernameField.setEditable(true);
             }
@@ -434,7 +461,7 @@ public class FreeleClient extends javax.swing.JFrame {
                     printWriter.println(username + "βhas connected.βConnect");
                     printWriter.flush();
                     isConnected = true;
-                } catch (Exception e) {
+                } catch (IOException e) {
                     chatArea.append("Cannot connect, please try again. \n");
                     usernameField.setEditable(true);
                 }
@@ -513,6 +540,7 @@ public class FreeleClient extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 new FreeleClient().setVisible(true);
             }
@@ -529,10 +557,12 @@ public class FreeleClient extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JList jList1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTextArea onlineUsers;
     private javax.swing.JTextField privateChatField;
     private javax.swing.JButton privateConversationButton;
