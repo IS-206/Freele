@@ -11,7 +11,8 @@ Vetle Framnes
 Mirza Cirikovic
 
 
-The main prupose of the project is to learn more about java programming, hosting, and database.
+The main prupose of the project is to learn more about java programming, hosting.
+
 We are a dedicated group that appreciate feedbacks!
 
 
