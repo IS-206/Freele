@@ -11,6 +11,8 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
+import javax.swing.DefaultListModel;
+import javax.swing.JList;
 
 /**
  *
@@ -26,6 +28,8 @@ public class FreeleClient extends javax.swing.JFrame {
     PrintWriter printWriter;
     ArrayList<String> userList = new ArrayList();
     Boolean isConnected = false;
+    DefaultListModel model = new DefaultListModel();
+    JList onlineUsersList = new JList(model);
 
     public FreeleClient() {
         initComponents();
@@ -90,29 +94,38 @@ public class FreeleClient extends javax.swing.JFrame {
         userList.add(data);
     }
 
+    
+    public void writeUsers() {
+        model.clear();
+        for(String s : userList){
+            model.addElement(s);
+        }
+        jScrollPane4.setViewportView(onlineUsersList);
+    }
 //--------------------------------------------------------------------------------------------------------         
     /**
      * Prints the userList in the onlineUsers area
      */
-    public void writeUsers() {
-        String[] list = new String[userList.size()];
-        userList.toArray(list);
-        for (String s : list) {
-            onlineUsers.append(s + "\n");
-        }
-        System.out.println("1 userList har " + userList.size() + " items");
-        final String[] strings = new String[userList.size()];
-        userList.toArray(strings);
-        jList1.setModel(new javax.swing.AbstractListModel() {
-            
-            
-            @Override
-            public int getSize() { return strings.length; }
-            @Override
-            public String getElementAt(int i) { return strings[i]; }
-        }); 
-        System.out.println("2 strings har " + strings.length + " items.");
-    }
+//    public void writeUsers() {
+//        String[] list = new String[userList.size()];
+//        userList.toArray(list);
+//        for (String s : list) {
+//            onlineUsers.append(s + "\n");
+//        }
+//        System.out.println("1 userList har " + userList.size() + " items");
+//        final String[] strings = new String[userList.size()];
+//        userList.toArray(strings);
+//        jList1.setModel(new javax.swing.AbstractListModel() {
+//            
+//            
+//            @Override
+//            public int getSize() { return strings.length; }
+//            @Override
+//            public String getElementAt(int i) { return strings[i]; }
+//        });
+//        jList1 = new JList(userList.toArray(new String[userList.size()]));
+//        System.out.println("2 strings har " + strings.length + " items.");
+//    }
     
 //--------------------------------------------------------------------------------------------------------     
     public void privateMessage(String privName){
@@ -141,6 +154,7 @@ public class FreeleClient extends javax.swing.JFrame {
         try {
             chatArea.append("Disconnected \n");
             socket.close();
+            model.clear();
         } catch (IOException e) {
             chatArea.append("Failed to disconnect");
         }
