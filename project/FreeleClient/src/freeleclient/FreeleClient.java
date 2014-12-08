@@ -60,11 +60,10 @@ public class FreeleClient extends javax.swing.JFrame {
                         chatArea.removeAll();
                         addUser(data[0]);
                     } else if (data[2].equals(done)) {
-                        onlineUsers.setText("");
                         writeUsers();
                         userList.clear();
                     } else if (data[2].equals(privateChat)){
-                        privateMessage(data[3]);
+                        privateMessage(data[3], printWriter, data[0]);
                     }
 
                 }
@@ -128,8 +127,16 @@ public class FreeleClient extends javax.swing.JFrame {
 //    }
     
 //--------------------------------------------------------------------------------------------------------     
-    public void privateMessage(String privName){
-        new PrivateChat(privName).setVisible(true);
+
+    /**
+     * Prints the userList in the onlineUsers area
+     * @param privName //the name of the client that creates the connection
+     * @param p
+     */
+        public void privateMessage(String privName, PrintWriter p, String m){
+        PrivateChat chat = new PrivateChat(privName, p);
+        chat.setVisible(true);
+        chat.print(m);
     }
 
 //--------------------------------------------------------------------------------------------------------         
@@ -162,7 +169,6 @@ public class FreeleClient extends javax.swing.JFrame {
         usernameField.setEditable(true);
         getIP.setEditable(true);
         getPORT.setEditable(true);
-        onlineUsers.setText("");
     }
 
 //--------------------------------------------------------------------------------------------------------         
@@ -182,8 +188,6 @@ public class FreeleClient extends javax.swing.JFrame {
         connectButton = new javax.swing.JButton();
         disconnectButton = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        onlineUsers = new javax.swing.JTextArea();
         jScrollPane2 = new javax.swing.JScrollPane();
         chatArea = new javax.swing.JTextArea();
         jScrollPane3 = new javax.swing.JScrollPane();
@@ -192,7 +196,6 @@ public class FreeleClient extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         getPORT = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        privateChatField = new javax.swing.JTextField();
         privateConversationButton = new javax.swing.JButton();
         jScrollPane4 = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList();
@@ -250,11 +253,6 @@ public class FreeleClient extends javax.swing.JFrame {
 
         jLabel2.setText("Online users");
 
-        onlineUsers.setEditable(false);
-        onlineUsers.setColumns(1);
-        onlineUsers.setRows(5);
-        jScrollPane1.setViewportView(onlineUsers);
-
         chatArea.setEditable(false);
         chatArea.setColumns(20);
         chatArea.setLineWrap(true);
@@ -308,7 +306,7 @@ public class FreeleClient extends javax.swing.JFrame {
         });
 
         jList1.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            String[] strings = {};
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
@@ -320,39 +318,38 @@ public class FreeleClient extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 412, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 412, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(privateChatField)
-                            .addComponent(privateConversationButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(privateConversationButton))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel3))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(getIP, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jLabel4)
-                                .addGap(18, 18, 18)
-                                .addComponent(getPORT))
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 412, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(usernameField, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel1)
+                                    .addComponent(jLabel3))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(connectButton)
-                                .addGap(18, 18, 18)
-                                .addComponent(disconnectButton, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel2)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(getIP, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(jLabel4)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(getPORT))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(usernameField, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(connectButton)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(disconnectButton, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(49, 49, 49)
+                                .addComponent(jLabel2)))
+                        .addGap(0, 2, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -374,15 +371,11 @@ public class FreeleClient extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 253, Short.MAX_VALUE)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 253, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 253, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 253, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(privateChatField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(privateConversationButton))
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(privateConversationButton))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -518,8 +511,8 @@ public class FreeleClient extends javax.swing.JFrame {
     }//GEN-LAST:event_getPORTKeyPressed
 
     private void privateConversationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_privateConversationButtonActionPerformed
-        new PrivateChat(privateChatField.getText()).setVisible(true);
-        String p = privateChatField.getText();
+        String p = onlineUsersList.getSelectedValue().toString();
+        new PrivateChat(p, printWriter).setVisible(true);
         String u = usernameField.getText();
         printWriter.println(p + "ββPrivate" + "β" + u);
         printWriter.flush();
@@ -573,12 +566,9 @@ public class FreeleClient extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JList jList1;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JTextArea onlineUsers;
-    private javax.swing.JTextField privateChatField;
     private javax.swing.JButton privateConversationButton;
     private javax.swing.JTextField usernameField;
     private javax.swing.JTextField usernameField2;

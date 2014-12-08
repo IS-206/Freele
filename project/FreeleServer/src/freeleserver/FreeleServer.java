@@ -83,7 +83,6 @@ public class FreeleServer {
                         messageAll(message);
                     } else if (data[2].equals(privateChat)) {
                         privateConversation(data[0], data[1], data[3]);
-                        System.out.println(data[0] + "5kommer hit" + data[1] + data[2] + data[3]);
                     } else {
                         System.out.println("something gone wrong");
                     }
