@@ -69,6 +69,9 @@ public class PrivateChat extends javax.swing.JFrame {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 privInputFieldKeyPressed(evt);
             }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                privInputFieldKeyReleased(evt);
+            }
         });
         jScrollPane2.setViewportView(privInputField);
 
@@ -131,6 +134,12 @@ public class PrivateChat extends javax.swing.JFrame {
             privInputField.requestFocus();
         }
     }//GEN-LAST:event_privInputFieldKeyPressed
+
+    private void privInputFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_privInputFieldKeyReleased
+        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
+            privInputField.setText(null);              
+        }
+    }//GEN-LAST:event_privInputFieldKeyReleased
 
     /**
      * @param args the command line arguments
