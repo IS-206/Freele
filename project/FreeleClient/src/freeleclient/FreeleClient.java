@@ -30,7 +30,7 @@ public class FreeleClient extends javax.swing.JFrame {
     Boolean isConnected = false;
     DefaultListModel model = new DefaultListModel();
     JList onlineUsersList = new JList(model);
-
+//test
     public FreeleClient() {
         initComponents();
     }
