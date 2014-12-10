@@ -36,6 +36,7 @@ public class FreeleClient extends javax.swing.JFrame {
 
     public FreeleClient() {
         initComponents();
+        ongoingPrivChat.add("InitList");
     }
 
     public class IncomingReader implements Runnable {
@@ -65,7 +66,7 @@ public class FreeleClient extends javax.swing.JFrame {
                     } else if (data[2].equals(done)) {
                         writeUsers();
                         userList.clear();
-                    } else if (data[2].equals(privateChat)){
+                    } else if (data[2].equals(privateChat)) {
                         privateMessage(data[3], printWriter, data[0]);
                     }
 
@@ -74,7 +75,6 @@ public class FreeleClient extends javax.swing.JFrame {
                 //
             }
         }
-
     }
 
 //--------------------------------------------------------------------------------------------------------        
@@ -96,15 +96,15 @@ public class FreeleClient extends javax.swing.JFrame {
         userList.add(data);
     }
 
-    
     public void writeUsers() {
         model.clear();
-        for(String s : userList){
+        for (String s : userList) {
             model.addElement(s);
         }
         jScrollPane4.setViewportView(onlineUsersList);
     }
 //--------------------------------------------------------------------------------------------------------         
+
     /**
      * Prints the userList in the onlineUsers area
      */
@@ -128,19 +128,18 @@ public class FreeleClient extends javax.swing.JFrame {
 //        jList1 = new JList(userList.toArray(new String[userList.size()]));
 //        System.out.println("2 strings har " + strings.length + " items.");
 //    }
-    
 //--------------------------------------------------------------------------------------------------------     
-
     /**
      * Prints the userList in the onlineUsers area
+     *
      * @param privName //the name of the client that creates the connection
      * @param p
      * @param m
      */
-        public void privateMessage(String privName, PrintWriter p, String m){
-        if(chat == null){
-        chat = new PrivateChat(privName, p);
-        chat.setVisible(true);
+    public void privateMessage(String privName, PrintWriter p, String m) {
+        if (chat == null) {
+            chat = new PrivateChat(privName, p);
+            chat.setVisible(true);
         }
         chat.print(m);
     }
@@ -518,19 +517,25 @@ public class FreeleClient extends javax.swing.JFrame {
 
     private void privateConversationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_privateConversationButtonActionPerformed
         String p = onlineUsersList.getSelectedValue().toString();
-        for(String s : ongoingPrivChat){
+        boolean isListed = false;
+        for (String s : ongoingPrivChat) {
             System.out.println("leser 1");
-            if(!s.equals(p)){
-                ongoingPrivChat.add(p);
-                ownChat = new PrivateChat(p, printWriter);
-                ownChat.setVisible(true);  
+            if (s.equals(p)) {
+                isListed = true;
+
                 System.out.println("leser 2");
             }
+        }
+        if (isListed == false) {
+            ongoingPrivChat.add(p);
+            ownChat = new PrivateChat(p, printWriter);
+            ownChat.setVisible(true);
         }
         System.out.println("leser 3");
         String u = usernameField.getText();
         printWriter.println(p + "ββPrivate" + "β" + u);
         printWriter.flush();
+        System.out.println(ongoingPrivChat.size());
     }//GEN-LAST:event_privateConversationButtonActionPerformed
 
     /**
