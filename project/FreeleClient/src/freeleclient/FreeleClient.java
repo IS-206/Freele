@@ -11,6 +11,8 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 
@@ -32,11 +34,11 @@ public class FreeleClient extends javax.swing.JFrame {
     JList onlineUsersList = new JList(model);
     PrivateChat chat;
     PrivateChat ownChat;
-    ArrayList<String> ongoingPrivChat = new ArrayList<>();
+    HashMap<String, String> ongoingPrivChat = new HashMap<>();
 
     public FreeleClient() {
         initComponents();
-        ongoingPrivChat.add("InitList");
+        ongoingPrivChat.put("Init", "List");
     }
 
     public class IncomingReader implements Runnable {
@@ -137,11 +139,13 @@ public class FreeleClient extends javax.swing.JFrame {
      * @param m
      */
     public void privateMessage(String privName, PrintWriter p, String m) {
-        if (chat == null) {
-            chat = new PrivateChat(privName, p);
-            chat.setVisible(true);
+        if (ownChat == null) {
+            ownChat = new PrivateChat(privName, p, usernameField.getText());
+            ownChat.setVisible(true);
         }
-        chat.print(m);
+        if(!m.equals("")){
+            ownChat.print(privName + ": " + m + "\n");
+        }
     }
 
 //--------------------------------------------------------------------------------------------------------         
@@ -516,24 +520,25 @@ public class FreeleClient extends javax.swing.JFrame {
     }//GEN-LAST:event_getPORTKeyPressed
 
     private void privateConversationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_privateConversationButtonActionPerformed
-        String p = onlineUsersList.getSelectedValue().toString();
+        String targetName = onlineUsersList.getSelectedValue().toString();
+        String ownName = usernameField.getText();
         boolean isListed = false;
-        for (String s : ongoingPrivChat) {
+        for (Map.Entry<String, String> s : ongoingPrivChat.entrySet()) {
             System.out.println("leser 1");
-            if (s.equals(p)) {
+            if (s.getValue().equals(targetName) && s.getKey().equals(ownName) || s.getValue().equals(ownName) && s.getKey().equals(targetName)) {
                 isListed = true;
 
                 System.out.println("leser 2");
             }
         }
         if (isListed == false) {
-            ongoingPrivChat.add(p);
-            ownChat = new PrivateChat(p, printWriter);
+            ongoingPrivChat.put(ownName, targetName);
+            ownChat = new PrivateChat(targetName, printWriter, ownName);
             ownChat.setVisible(true);
         }
         System.out.println("leser 3");
         String u = usernameField.getText();
-        printWriter.println(p + "ββPrivate" + "β" + u);
+        printWriter.println(targetName + "ββPrivate" + "β" + u);
         printWriter.flush();
         System.out.println(ongoingPrivChat.size());
     }//GEN-LAST:event_privateConversationButtonActionPerformed

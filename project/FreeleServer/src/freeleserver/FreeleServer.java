@@ -189,6 +189,7 @@ public class FreeleServer {
             if (username.equals(s.getKey())) {
                 p.println(m + message);
                 p.flush();
+                System.out.println(m);
             }
         }
 

@@ -16,7 +16,8 @@ import java.io.PrintWriter;
 public class PrivateChat extends javax.swing.JFrame {
 
     private PrintWriter writer;
-    private String username;
+    private String targetName;
+    private String ownName;
     /**
      * Creates new form PrivateChat
      */
@@ -24,11 +25,12 @@ public class PrivateChat extends javax.swing.JFrame {
         initComponents();
     }
     
-    public PrivateChat(String username, PrintWriter writer) {
+    public PrivateChat(String targetName, PrintWriter writer, String ownName) {
         initComponents();
-        privUsername.setText(username);
-        this.username = username;
+        privUsername.setText(targetName);
+        this.targetName = targetName;
         this.writer = writer;
+        this.ownName = ownName;
     }
     
     public void print(String message){
@@ -121,8 +123,8 @@ public class PrivateChat extends javax.swing.JFrame {
                 privInputField.requestFocus();
             } else {
                 try {
-                    writer.println(username + "β" + privInputField.getText() + "βPrivate" + "βseems like this string needs to get passed to avoid Error");
-                    privChatArea.append(privInputField.getText() + "\n");
+                    writer.println(targetName + "β" + privInputField.getText() + "βPrivate" + "β" + ownName);
+                    privChatArea.append(ownName + ": " + privInputField.getText() + "\n");
                     writer.flush();
                 } catch(Exception e){
                     privChatArea.append("Error in sending message. \n");
