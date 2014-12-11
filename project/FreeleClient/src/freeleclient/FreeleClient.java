@@ -14,6 +14,30 @@ import java.util.ArrayList;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 
+
+// CIPHER / GENERATORS
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.KeyGenerator;
+
+// KEY SPECIFICATIONS
+import java.security.spec.KeySpec;
+import java.security.spec.AlgorithmParameterSpec;
+import javax.crypto.spec.PBEKeySpec;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEParameterSpec;
+
+// EXCEPTIONS
+import java.security.InvalidAlgorithmParameterException;
+import java.security.NoSuchAlgorithmException;
+import java.security.InvalidKeyException;
+import java.security.spec.InvalidKeySpecException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import java.io.UnsupportedEncodingException;
+import java.io.IOException;
+
 /**
  *
  * @author Vetle, Mirza, Kjetil
@@ -30,11 +54,100 @@ public class FreeleClient extends javax.swing.JFrame {
     Boolean isConnected = false;
     DefaultListModel model = new DefaultListModel();
     JList onlineUsersList = new JList(model);
-//test
+    
+    // Encryption related members
+    Cipher ecipher;
+    Cipher dcipher;
+    
     public FreeleClient() {
         initComponents();
-    }
+        // encryption initialization
+        String passPhrase = "My Pass Phrase"; // key
+        // 8-bytes Salt
+        byte[] salt = {
+            (byte)0xA9, (byte)0x9B, (byte)0xC8, (byte)0x32,
+            (byte)0x56, (byte)0x34, (byte)0xE3, (byte)0x03
+        };
 
+        // Iteration count
+        int iterationCount = 19;
+
+        try {
+
+            KeySpec keySpec = new PBEKeySpec(passPhrase.toCharArray(), salt, iterationCount);
+            SecretKey key = SecretKeyFactory.getInstance("PBEWithMD5AndDES").generateSecret(keySpec);
+
+            ecipher = Cipher.getInstance(key.getAlgorithm());
+            dcipher = Cipher.getInstance(key.getAlgorithm());
+
+            // Prepare the parameters to the cipthers
+            AlgorithmParameterSpec paramSpec = new PBEParameterSpec(salt, iterationCount);
+
+            ecipher.init(Cipher.ENCRYPT_MODE, key, paramSpec);
+            dcipher.init(Cipher.DECRYPT_MODE, key, paramSpec);
+
+        } catch (InvalidAlgorithmParameterException e) {
+            System.out.println("EXCEPTION: InvalidAlgorithmParameterException");
+        } catch (InvalidKeySpecException e) {
+            System.out.println("EXCEPTION: InvalidKeySpecException");
+        } catch (NoSuchPaddingException e) {
+            System.out.println("EXCEPTION: NoSuchPaddingException");
+        } catch (NoSuchAlgorithmException e) {
+            System.out.println("EXCEPTION: NoSuchAlgorithmException");
+        } catch (InvalidKeyException e) {
+            System.out.println("EXCEPTION: InvalidKeyException");
+        }
+    }
+    /**
+     * Takes a single String as an argument and returns an Encrypted version
+     * of that String.
+     * @param str String to be encrypted
+     * @return <code>String</code> Encrypted version of the provided String
+     */
+    public String encrypt(String str) {
+        try {
+            // Encode the string into bytes using utf-8
+            byte[] utf8 = str.getBytes("UTF8");
+
+            // Encrypt
+            byte[] enc = ecipher.doFinal(utf8);
+
+            // Encode bytes to base64 to get a string
+            return new sun.misc.BASE64Encoder().encode(enc);
+
+        } catch (BadPaddingException e) {
+        } catch (IllegalBlockSizeException e) {
+        } catch (UnsupportedEncodingException e) {
+        } catch (IOException e) {
+        }
+        return null;
+    }
+   /**
+     * Takes a encrypted String as an argument, decrypts and returns the 
+     * decrypted String.
+     * @param str Encrypted String to be decrypted
+     * @return <code>String</code> Decrypted version of the provided String
+     */
+     public String decrypt(String str) {
+
+        try {
+
+            // Decode base64 to get bytes
+            byte[] dec = new sun.misc.BASE64Decoder().decodeBuffer(str);
+
+            // Decrypt
+            byte[] utf8 = dcipher.doFinal(dec);
+
+            // Decode using utf-8
+            return new String(utf8, "UTF8");
+
+        } catch (BadPaddingException e) {
+        } catch (IllegalBlockSizeException e) {
+        } catch (UnsupportedEncodingException e) {
+        } catch (IOException e) {
+        }
+        return null;
+    }
     public class IncomingReader implements Runnable {
 
         /**
@@ -51,7 +164,8 @@ public class FreeleClient extends javax.swing.JFrame {
 
             try {
                 while ((transfer = bufferedReader.readLine()) != null) {
-                    data = transfer.split("Î²"); // this symbol will split
+                    transfer = decrypt(transfer); // decrypt data recieved from server
+                    data = transfer.split("β"); // this symbol will split
 
                     if (data[2].equals(chat)) {
                         chatArea.append(data[0] + ": " + data[1] + "\n");
@@ -144,9 +258,9 @@ public class FreeleClient extends javax.swing.JFrame {
      * Sends a disconnect-signal to the server and flushes the buffer
      */
     public void signalingDisconnect() {
-        String off = (username + "Î² Î²Disconnect");
+        String off = (username + "β βDisconnect");
         try {
-            printWriter.println(off);
+            printWriter.println(encrypt(off));
             printWriter.flush();
         } catch (Exception e) {
             chatArea.append("Could not send the disconnect message. \n");
@@ -178,7 +292,7 @@ public class FreeleClient extends javax.swing.JFrame {
      * regenerated by the Form Editor.
      */
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
@@ -380,28 +494,28 @@ public class FreeleClient extends javax.swing.JFrame {
         );
 
         pack();
-    }// </editor-fold>//GEN-END:initComponents
+    }// </editor-fold>                        
 
-    private void usernameFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usernameFieldActionPerformed
+    private void usernameFieldActionPerformed(java.awt.event.ActionEvent evt) {                                              
         // TODO add your handling code here:
-    }//GEN-LAST:event_usernameFieldActionPerformed
+    }                                             
 
     /**
      * Sends the server a disconnect signal before the socket closes
      *
      * @param evt
      */
-    private void disconnectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_disconnectButtonActionPerformed
+    private void disconnectButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                 
         signalingDisconnect();
         disconnect();
-    }//GEN-LAST:event_disconnectButtonActionPerformed
+    }                                                
 
     /**
      * Creates a socket and establish a connection to the server process.
      *
      * @param evt
      */
-    private void connectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connectButtonActionPerformed
+    private void connectButtonActionPerformed(java.awt.event.ActionEvent evt) {                                              
         if (isConnected == false) {
             username = usernameField.getText();
             serverIP = getIP.getText();
@@ -415,7 +529,8 @@ public class FreeleClient extends javax.swing.JFrame {
                 InputStreamReader reader = new InputStreamReader(socket.getInputStream());
                 bufferedReader = new BufferedReader(reader);
                 printWriter = new PrintWriter(socket.getOutputStream());
-                printWriter.println(username + "Î²has connected.Î²Connect");
+                String CompleteMessage = username + "βhas connected.βConnect";
+                printWriter.println(encrypt(CompleteMessage));
                 printWriter.flush();
                 isConnected = true;
             } catch (IOException e) {
@@ -426,10 +541,10 @@ public class FreeleClient extends javax.swing.JFrame {
         } else if (isConnected == true) {
             chatArea.append("You are already connected \n");
         }
-    }//GEN-LAST:event_connectButtonActionPerformed
+    }                                             
 
     // Added a keyvenet in the inputfield, where when the user press the ENTER on the keyboard that sends the message to the server.
-    private void inputFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inputFieldKeyPressed
+    private void inputFieldKeyPressed(java.awt.event.KeyEvent evt) {                                      
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
 
             String n = "";
@@ -438,7 +553,8 @@ public class FreeleClient extends javax.swing.JFrame {
                 inputField.requestFocus();
             } else {
                 try {
-                    printWriter.println(username + "Î²" + inputField.getText() + "Î²" + "Chat");
+                    String CompleteMessage = username + "β" + inputField.getText() + "β" + "Chat";
+                    printWriter.println(encrypt(CompleteMessage));
                     printWriter.flush();
                 } catch (Exception e) {
                     chatArea.append("Error in sending message. \n");
@@ -450,9 +566,9 @@ public class FreeleClient extends javax.swing.JFrame {
             inputField.setText(null);
             inputField.requestFocus();
         }
-    }//GEN-LAST:event_inputFieldKeyPressed
+    }                                     
 
-    private void usernameFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_usernameFieldKeyPressed
+    private void usernameFieldKeyPressed(java.awt.event.KeyEvent evt) {                                         
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             if (isConnected == false) {
                 username = usernameField.getText();
@@ -465,7 +581,8 @@ public class FreeleClient extends javax.swing.JFrame {
                     InputStreamReader reader = new InputStreamReader(socket.getInputStream());
                     bufferedReader = new BufferedReader(reader);
                     printWriter = new PrintWriter(socket.getOutputStream());
-                    printWriter.println(username + "Î²has connected.Î²Connect");
+                    String CompleteMessage = username + "βhas connected.βConnect";
+                    printWriter.println(encrypt(CompleteMessage));
                     printWriter.flush();
                     isConnected = true;
                 } catch (IOException e) {
@@ -477,46 +594,47 @@ public class FreeleClient extends javax.swing.JFrame {
                 chatArea.append("You are already connected \n");
             }
         }
-    }//GEN-LAST:event_usernameFieldKeyPressed
+    }                                        
 
 // Fixes the new line that the inputFieldKeyPressed() makes after sending a message, this will set the text field to nothing and afther you release the enter button.
-    private void inputFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inputFieldKeyReleased
+    private void inputFieldKeyReleased(java.awt.event.KeyEvent evt) {                                       
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             inputField.setText(null);
         }
-    }//GEN-LAST:event_inputFieldKeyReleased
+    }                                      
 
-    private void getIPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_getIPActionPerformed
+    private void getIPActionPerformed(java.awt.event.ActionEvent evt) {                                      
         // TODO add your handling code here:
-    }//GEN-LAST:event_getIPActionPerformed
+    }                                     
 
-    private void getIPKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_getIPKeyPressed
+    private void getIPKeyPressed(java.awt.event.KeyEvent evt) {                                 
         // TODO add your handling code here:
-    }//GEN-LAST:event_getIPKeyPressed
+    }                                
 
-    private void usernameField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usernameField2ActionPerformed
+    private void usernameField2ActionPerformed(java.awt.event.ActionEvent evt) {                                               
         // TODO add your handling code here:
-    }//GEN-LAST:event_usernameField2ActionPerformed
+    }                                              
 
-    private void usernameField2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_usernameField2KeyPressed
+    private void usernameField2KeyPressed(java.awt.event.KeyEvent evt) {                                          
         // TODO add your handling code here:
-    }//GEN-LAST:event_usernameField2KeyPressed
+    }                                         
 
-    private void getPORTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_getPORTActionPerformed
+    private void getPORTActionPerformed(java.awt.event.ActionEvent evt) {                                        
         // TODO add your handling code here:
-    }//GEN-LAST:event_getPORTActionPerformed
+    }                                       
 
-    private void getPORTKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_getPORTKeyPressed
+    private void getPORTKeyPressed(java.awt.event.KeyEvent evt) {                                   
         // TODO add your handling code here:
-    }//GEN-LAST:event_getPORTKeyPressed
+    }                                  
 
-    private void privateConversationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_privateConversationButtonActionPerformed
+    private void privateConversationButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                          
         String p = onlineUsersList.getSelectedValue().toString();
         new PrivateChat(p, printWriter).setVisible(true);
         String u = usernameField.getText();
-        printWriter.println(p + "Î²Î²Private" + "Î²" + u);
+        String CompleteMessage = p + "ββPrivate" + "β" + u;
+        printWriter.println(encrypt(CompleteMessage));
         printWriter.flush();
-    }//GEN-LAST:event_privateConversationButtonActionPerformed
+    }                                                         
 
     /**
      * @param args the command line arguments
@@ -553,7 +671,7 @@ public class FreeleClient extends javax.swing.JFrame {
             }
         });
     }
-    // Variables declaration - do not modify//GEN-BEGIN:variables
+    // Variables declaration - do not modify                     
     private javax.swing.JTextArea chatArea;
     private javax.swing.JButton connectButton;
     private javax.swing.JButton disconnectButton;
@@ -572,5 +690,5 @@ public class FreeleClient extends javax.swing.JFrame {
     private javax.swing.JButton privateConversationButton;
     private javax.swing.JTextField usernameField;
     private javax.swing.JTextField usernameField2;
-    // End of variables declaration//GEN-END:variables
+    // End of variables declaration                   
 }
