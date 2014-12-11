@@ -51,7 +51,7 @@ public class FreeleClient extends javax.swing.JFrame {
 
             try {
                 while ((transfer = bufferedReader.readLine()) != null) {
-                    data = transfer.split("β"); // this symbol will split
+                    data = transfer.split("Î²"); // this symbol will split
 
                     if (data[2].equals(chat)) {
                         chatArea.append(data[0] + ": " + data[1] + "\n");
@@ -144,7 +144,7 @@ public class FreeleClient extends javax.swing.JFrame {
      * Sends a disconnect-signal to the server and flushes the buffer
      */
     public void signalingDisconnect() {
-        String off = (username + "β βDisconnect");
+        String off = (username + "Î² Î²Disconnect");
         try {
             printWriter.println(off);
             printWriter.flush();
@@ -415,7 +415,7 @@ public class FreeleClient extends javax.swing.JFrame {
                 InputStreamReader reader = new InputStreamReader(socket.getInputStream());
                 bufferedReader = new BufferedReader(reader);
                 printWriter = new PrintWriter(socket.getOutputStream());
-                printWriter.println(username + "βhas connected.βConnect");
+                printWriter.println(username + "Î²has connected.Î²Connect");
                 printWriter.flush();
                 isConnected = true;
             } catch (IOException e) {
@@ -438,7 +438,7 @@ public class FreeleClient extends javax.swing.JFrame {
                 inputField.requestFocus();
             } else {
                 try {
-                    printWriter.println(username + "β" + inputField.getText() + "β" + "Chat");
+                    printWriter.println(username + "Î²" + inputField.getText() + "Î²" + "Chat");
                     printWriter.flush();
                 } catch (Exception e) {
                     chatArea.append("Error in sending message. \n");
@@ -465,7 +465,7 @@ public class FreeleClient extends javax.swing.JFrame {
                     InputStreamReader reader = new InputStreamReader(socket.getInputStream());
                     bufferedReader = new BufferedReader(reader);
                     printWriter = new PrintWriter(socket.getOutputStream());
-                    printWriter.println(username + "βhas connected.βConnect");
+                    printWriter.println(username + "Î²has connected.Î²Connect");
                     printWriter.flush();
                     isConnected = true;
                 } catch (IOException e) {
@@ -514,7 +514,7 @@ public class FreeleClient extends javax.swing.JFrame {
         String p = onlineUsersList.getSelectedValue().toString();
         new PrivateChat(p, printWriter).setVisible(true);
         String u = usernameField.getText();
-        printWriter.println(p + "ββPrivate" + "β" + u);
+        printWriter.println(p + "Î²Î²Private" + "Î²" + u);
         printWriter.flush();
     }//GEN-LAST:event_privateConversationButtonActionPerformed
 
