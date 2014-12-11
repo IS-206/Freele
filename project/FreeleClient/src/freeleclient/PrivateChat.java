@@ -6,17 +6,12 @@
 
 package freeleclient;
 
-import java.awt.event.KeyEvent;
-import java.io.PrintWriter;
-
 /**
  *
  * @author Vetle
  */
 public class PrivateChat extends javax.swing.JFrame {
 
-    private PrintWriter writer;
-    private String username;
     /**
      * Creates new form PrivateChat
      */
@@ -24,15 +19,9 @@ public class PrivateChat extends javax.swing.JFrame {
         initComponents();
     }
     
-    public PrivateChat(String username, PrintWriter writer) {
+    public PrivateChat(String username) {
         initComponents();
         privUsername.setText(username);
-        this.username = username;
-        this.writer = writer;
-    }
-    
-    public void print(String message){
-        privChatArea.append(message);
     }
 
     /**
@@ -45,32 +34,22 @@ public class PrivateChat extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        privChatArea = new javax.swing.JTextArea();
+        jTextArea1 = new javax.swing.JTextArea();
         jScrollPane2 = new javax.swing.JScrollPane();
-        privInputField = new javax.swing.JTextArea();
+        jTextArea2 = new javax.swing.JTextArea();
         jLabel3 = new javax.swing.JLabel();
         privUsername = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        privChatArea.setEditable(false);
-        privChatArea.setColumns(20);
-        privChatArea.setRows(5);
-        jScrollPane1.setViewportView(privChatArea);
+        jTextArea1.setEditable(false);
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jScrollPane1.setViewportView(jTextArea1);
 
-        privInputField.setColumns(20);
-        privInputField.setRows(5);
-        privInputField.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                privInputFieldFocusGained(evt);
-            }
-        });
-        privInputField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                privInputFieldKeyPressed(evt);
-            }
-        });
-        jScrollPane2.setViewportView(privInputField);
+        jTextArea2.setColumns(20);
+        jTextArea2.setRows(5);
+        jScrollPane2.setViewportView(jTextArea2);
 
         jLabel3.setText("Speaking to:");
 
@@ -105,32 +84,6 @@ public class PrivateChat extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void privInputFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_privInputFieldFocusGained
-        // TODO add your handling code here:
-    }//GEN-LAST:event_privInputFieldFocusGained
-
-    private void privInputFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_privInputFieldKeyPressed
-        if(evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            String n = "";
-            if((privInputField.getText()).equals(n)) {
-                privInputField.setText("");
-                privInputField.requestFocus();
-            } else {
-                try {
-                    writer.println(username + "β" + privInputField.getText() + "βPrivate" + "βseems like this string needs to get passed to avoid Error");
-                    privChatArea.append(privInputField.getText() + "\n");
-                    writer.flush();
-                } catch(Exception e){
-                    privChatArea.append("Error in sending message. \n");
-                }
-                privInputField.setText("");
-                privInputField.requestFocus();
-            }
-            privInputField.setText(null);
-            privInputField.requestFocus();
-        }
-    }//GEN-LAST:event_privInputFieldKeyPressed
 
     /**
      * @param args the command line arguments
@@ -172,8 +125,8 @@ public class PrivateChat extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextArea privChatArea;
-    private javax.swing.JTextArea privInputField;
+    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JTextArea jTextArea2;
     private javax.swing.JLabel privUsername;
     // End of variables declaration//GEN-END:variables
 }
