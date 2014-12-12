@@ -1,6 +1,6 @@
 # Freele Chat room
 
-This is an open source project that we are working on, the main purpose is to learn more about java programing, We are a dedicated group that appreciate feedbacks! 
+This is an open source project that we are working on, the main purpose is to learn more about java programing, We are a dedicated group that appreciate feedbacks! We want to establish a community where everybody can come and participate! So dont be shy, fork it and pull it!
 
 This is a school project about open source.
 
@@ -22,7 +22,7 @@ What we are doing:
 # Getting started
 
 
-Afther you have downloaded the source files, you should start by going FreeleServer.java, 
+Afther you have downloaded the source files, you should start by going to FreeleServer.java, 
 here you should find the server socket on line 183:
 
 ```java
@@ -30,7 +30,7 @@ ServerSocket serverSocket = new ServerSocket(4000);
 
 ```
 
-You should change this to your choise of the port you want to use, remeber to port forward to wich computer is using running the server. We don't go trough how to open a port but you can find plenty of guides on the internett.
+You should change this to your choise of the port you want to use, remeber to port forward to wich computer is running the program. We don't go trough how to open a port but you can find plenty of guides on the internett.
 You can go here for starters : [port forwarding](http://portforward.com/)
 
 
