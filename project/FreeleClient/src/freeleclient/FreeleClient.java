@@ -54,7 +54,6 @@ public class FreeleClient extends javax.swing.JFrame {
     Boolean isConnected = false;
     DefaultListModel model = new DefaultListModel();
     JList onlineUsersList = new JList(model);
-    PrivateChat chat;
     PrivateChat ownChat;
     HashMap<String, String> ongoingPrivChat = new HashMap<>();
     // Encryption related members
@@ -186,6 +185,7 @@ public class FreeleClient extends javax.swing.JFrame {
                         userList.clear();
                     } else if (data[2].equals(privateChat)) {
                         privateMessage(data[3], printWriter, data[0]);
+                        System.out.println(data[3] + " " + printWriter + " " + data[0]);
                     }
 
                 }
@@ -252,6 +252,7 @@ public class FreeleClient extends javax.swing.JFrame {
      *
      * @param privName //the name of the client that creates the connection
      * @param p
+     * @param m
      */
     public void privateMessage(String privName, PrintWriter p, String m) {
         if (ownChat == null) {
@@ -659,7 +660,7 @@ public class FreeleClient extends javax.swing.JFrame {
         }
         System.out.println("leser 3");
         String u = usernameField.getText();
-        printWriter.println(targetName + "ββPrivate" + "β" + u);
+        //printWriter.println(targetName + "ββPrivate" + "β" + u);
         String CompleteMessage = targetName + "ββPrivate" + "β" + u;
         printWriter.println(encrypt(CompleteMessage));
         printWriter.flush();
