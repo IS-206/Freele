@@ -38,7 +38,7 @@ You can go here for starters : [port forwarding](http://portforward.com/)
 
 
 ### License
-```java
+```txt
 The MIT License (MIT)
 
 Copyright (c) 2014 - Freele
