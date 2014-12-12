@@ -4,11 +4,14 @@ This is an open source project that we are working on, the main purpose is to le
 
 This is a school project about open source.
 
+### The project
+We want to build a encrypted chat room, where everybody can come inn and chat on a secure way.
+
 Members from the group is:
 
- * Mirza Cirikovic
- * Vetle Augustin Framnes
- * Kjetil Homme
+ * Mirza Cirikovic (realbunny)
+ * Vetle Augustin Framnes (vetlaf12)
+ * Kjetil Homme (khomme)
 
 What we are doing:
 
