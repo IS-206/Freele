@@ -1,5 +1,7 @@
 # Freele Chat room
 
+### [Website](http://is-206.github.io/Freele)
+
 This is an open source project that we are working on, the main purpose is to learn more about java programing, We are a dedicated group that appreciate feedbacks! We want to establish a community where everybody can come and participate! So dont be shy, fork it and pull it!
 
 This is a school project about open source.
